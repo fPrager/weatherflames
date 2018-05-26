@@ -68,7 +68,8 @@ var createSuperPoint = exports.createSuperPoint = function createSuperPoint(poin
 
                 (0, _branch.applyBranch)(branch, child.point, child.color);
 
-                // take far away points and move them into the center again to keep points from getting too out of hand
+                // take far away points and move them into the center
+                // again to keep points from getting too out of hand
                 if (child.point.lengthSq() > 50 * 50) {
                     _transforms.VARIATIONS.Spherical(child.point);
                 }

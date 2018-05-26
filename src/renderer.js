@@ -1,8 +1,8 @@
-import { generate, } from './generate';
+import { generate } from './generate';
 
 const render = (canvas, options) => {
-    generate({ ...options, canvas, });
+    generate({ ...options, canvas });
 };
 
-export const renderer = { render, };
+export const renderer = { render };
 

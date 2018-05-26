@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
-import { applyBranch, } from './branch';
-import { VARIATIONS, } from './transforms';
+import { applyBranch } from './branch';
+import { VARIATIONS } from './transforms';
 // import { UpdateVisitor } from './updateVisitor';
 
 let globalSubtreeIterationIndex = 0;
@@ -50,7 +50,8 @@ export const createSuperPoint = (point, color, rootGeometry, branches) => {
 
                 applyBranch(branch, child.point, child.color);
 
-                // take far away points and move them into the center again to keep points from getting too out of hand
+                // take far away points and move them into the center
+                // again to keep points from getting too out of hand
                 if (child.point.lengthSq() > 50 * 50) {
                     VARIATIONS.Spherical(child.point);
                 }

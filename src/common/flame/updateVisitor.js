@@ -33,7 +33,7 @@ export const createLengthVarianceTrackerVisitor = () => {
             this.varianceSumSq += lengthSq;
         },
         computeVariance() {
-            const { varianceSumSq, varianceSum, varianceNumSamples, } = this;
+            const { varianceSumSq, varianceSum, varianceNumSamples } = this;
             if (this.varianceNumSamples === 0) {
                 return 0;
             }
@@ -115,7 +115,7 @@ export const createBoxCountVisitor = (sideLengths) => {
             // really spaced out to ~6 which is extremely tiny
             // much of it ranges from 3.5 to like 4.5
             // it's a decent measure of how "dense" the fractal is
-            return [slopeCount, slopeDensity, ];
+            return [slopeCount, slopeDensity];
         },
     };
 };

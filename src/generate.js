@@ -1,42 +1,27 @@
 import * as THREE from 'three';
-import { lerp, map, sampleArray, triangleWaveApprox, } from './math';
-import { AFFINES, VARIATIONS, createInterpolatedVariation, createRouterVariation, } from './common/flame/transforms';
-import { applyBranch, } from './common/flame/branch';
-import { createSuperPoint, } from './common/flame/superPoint';
-import { createVelocityTrackerVisitor, createLengthVarianceTrackerVisitor, createBoxCountVisitor, } from './common/flame/updateVisitor';
+import { map } from './math';
+import {
+    AFFINES,
+    VARIATIONS,
+    createInterpolatedVariation,
+    createRouterVariation,
+} from './common/flame/transforms';
+import { createSuperPoint } from './common/flame/superPoint';
+import {
+    createVelocityTrackerVisitor,
+    createLengthVarianceTrackerVisitor,
+    createBoxCountVisitor,
+} from './common/flame/updateVisitor';
 
 let geometry;
 let globalBranches;
 let superPoint;
-let cX = 0;
-let cY = 0;
 const jumpiness = 3;
 let boundingSphere;
-const noiseGainScale = 0;
-const oscLowGate = 0;
-const oscHighGate = 0;
-
-let noiseGain;
-let oscLow;
-let oscHigh;
-let oscHighGain;
-let oscGain;
-let chord;
-let filter;
-let compressor;
 
 const objectValueByIndex = (obj, index) => {
     const keys = Object.keys(obj);
     return obj[keys[index % keys.length]];
-};
-
-const sigmoid = (x) => {
-    if (x > 10) {
-        return 1;
-    } else if (x < -10) {
-        return 0;
-    }
-    return 1 / (1 + Math.exp(-x));
 };
 
 const stringHash = (s) => {
@@ -53,7 +38,7 @@ const stringHash = (s) => {
 };
 
 
-function computeDepth() {
+const computeDepth = () => {
     // points at exactly depth d = b^d
     // points from depth 0...d = b^0 + b^1 + b^2 + ... b^d
     // we want total points to be ~120k, so
@@ -65,63 +50,25 @@ function computeDepth() {
         : Math.floor(Math.log(100000) / Math.log(globalBranches.length));
         // just do depth 1k to prevent call stack
     return depth;
-}
+};
 
-const animate = (time) => {
-    cX = (2 * sigmoid(6 * Math.sin(time))) - 1;
+const animate = () => {
     const velocityVisitor = createVelocityTrackerVisitor();
     const varianceVisitor = createLengthVarianceTrackerVisitor();
-    const countVisitor = createBoxCountVisitor([1, 0.1, 0.01, 0.001, ]);
-    superPoint.recalculate(jumpiness, jumpiness, jumpiness, computeDepth(), velocityVisitor, varianceVisitor, countVisitor);
+    const countVisitor = createBoxCountVisitor([1, 0.1, 0.01, 0.001]);
+    superPoint.recalculate(
+        jumpiness,
+        jumpiness,
+        jumpiness,
+        computeDepth(),
+        velocityVisitor,
+        varianceVisitor,
+        countVisitor,
+    );
     if (boundingSphere == null) {
         geometry.computeBoundingSphere();
-        boundingSphere = geometry.boundingSphere;
+        ({ boundingSphere } = geometry);
     }
-
-    /* const velocity = velocityVisitor.computeVelocity();
-    const variance = varianceVisitor.computeVariance();
-    const [count, countDensity] = countVisitor.computeCountAndCountDensity();
-
-    // density ranges from 1 to ~6 or 7 at the high end.
-    // low density 1.5 and below are spaced out, larger fractals
-    // between 1.5 and 3 is a nice variety
-    // anything above 3 is really dense, hard to see
-    const density = countDensity / count;
-
-    const velocityFactor = Math.min(velocity * noiseGainScale, 0.3);
-    if (audioHasNoise) {
-        const noiseAmplitude = 2 / (1 + (density * density));
-        // smooth out density random noise
-        const target = noiseGain.gain.value * 0.9 + 0.1 * (velocityFactor * noiseAmplitude + 1e-4);
-        noiseGain.gain.setTargetAtTime(target, noiseGain.context.currentTime, 0.016);
-    }
-
-    const newOscGain = oscGain.gain.value * 0.9 + 0.1 * Math.max(0, Math.min(velocity * velocity * 2000, 0.6) - 0.01);
-    oscGain.gain.setTargetAtTime(newOscGain, oscGain.context.currentTime, 0.016);
-
-    const newOscFreq = oscLow.frequency.value * 0.8 + 0.2 * (100 + baseLowFrequency * Math.pow(2, Math.log(1 + variance)));
-    oscLow.frequency.setTargetAtTime(newOscFreq * oscLowGate, oscLow.context.currentTime, 0.016);
-
-    const velocitySq = map(velocity * velocity, 1e-8, 0.005, -10, 10);
-    oscHigh.frequency.setTargetAtTime(
-        Math.min(map(sigmoid(velocitySq), 0, 1, baseFrequency, baseFrequency * 5), 20000) * oscHighGate,
-        oscHigh.context.currentTime,
-        0.016,
-    );
-
-    if (audioHasChord) {
-        chord.setFrequency(100 + 100 * boundingSphere.radius);
-        chord.setMinorBias(baseThirdBias + velocity * 100 + sigmoid(variance - 3) * 4);
-        chord.setFifthBias(baseFifthBias + countDensity / 3);
-        const target = (chord.gain.gain.value * 0.9 + 0.1 * (velocityFactor * count * count / 8) + 3e-5);
-        chord.gain.gain.setTargetAtTime(target, chord.gain.context.currentTime, 0.016);
-    }
-
-    const cameraLength = camera.position.length();
-    compressor.ratio.setTargetAtTime(1 + 3 / cameraLength, this.audioContext.currentTime, 0.016);
-    this.audioContext.gain.gain.setTargetAtTime((2.5 / cameraLength) + 0.05, this.audioContext.currentTime, 0.016);
-
-    console.log(geometry); */
 };
 
 // as low as 32 (for spaces)
@@ -157,13 +104,13 @@ const randomBranch = (idx, substring, numBranches, numWraps) => {
         variation = createInterpolatedVariation(
             variation,
             newVariation(),
-            () => 0.5
+            () => 0.5,
         );
     } else if (numWraps > 2 && random() < 0.2) {
         variation = createRouterVariation(
             variation,
             newVariation(),
-            p => p.z < 0
+            p => p.z < 0,
         );
     }
     const colorValues = [
@@ -198,8 +145,8 @@ const randomBranches = (name) => {
 
 const getPixel = (vertex, width, height) => {
     return {
-        x: width * (vertex.x * 0.3 + 0.5),
-        y: height * (vertex.y * 0.3 + 0.5),
+        x: width * ((vertex.x * 0.3) + 0.5),
+        y: height * ((vertex.y * 0.3) + 0.5),
     };
 };
 
@@ -225,24 +172,23 @@ const drawStroke = (context, image, x, y, z) => {
 export const generate = ({
     seed, canvas, image, time = 1,
 } = { }) => {
-    const hash = stringHash(seed);
-    const hashNorm = (hash % 1024) / 1024;
-
-    cY = map(hashNorm, 0, 1, -2.5, 2.5);
     globalBranches = randomBranches(seed);
 
     geometry = new THREE.Geometry();
     geometry.vertices = [];
     geometry.colors = [];
-    superPoint = createSuperPoint(new THREE.Vector3(0, 0, 0), new THREE.Color(0, 0, 0), geometry, globalBranches);
+    superPoint = createSuperPoint(
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Color(0, 0, 0),
+        geometry,
+        globalBranches,
+    );
 
-    animate(Math.PI / 5);
+    animate();
 
     // const canvas = new Canvas(800, 600);
     const ctx = canvas.getContext('2d');
-    let width,
-        height;
-    [width, height,] = [canvas.width, canvas.height,];
+    const [width, height] = [canvas.width, canvas.height];
 
     ctx.beginPath();
     ctx.rect(0, 0, width, height);
@@ -274,7 +220,10 @@ export const generate = ({
     }
 
     for (let i = 0; i < geometry.vertices.length; i += 1) {
-        const coords = geometry.vertices[i].applyAxisAngle(new THREE.Vector3(0, 1, 0), time * Math.PI);
+        const coords = geometry.vertices[i].applyAxisAngle(
+            new THREE.Vector3(0, 1, 0),
+            time * Math.PI,
+        );
         // coords.x = normalize(bounds.xMin, bounds.xMax, coords.x);
         // coords.y = normalize(bounds.yMin, bounds.yMax, coords.y);
         // coords.z = normalize(bounds.zMin, bounds.zMax, coords.z);
@@ -282,7 +231,13 @@ export const generate = ({
         ctx.beginPath();
         const maxWhite = 100;
 
-        const style = `rgba(${Math.round(geometry.colors[i].r * maxWhite)},${Math.round(geometry.colors[i].g * maxWhite)},${Math.round(geometry.colors[i].b * maxWhite)}, 0.6)`;
+        const style = `rgba(${
+            Math.round(geometry.colors[i].r * maxWhite)
+        },${
+            Math.round(geometry.colors[i].g * maxWhite)
+        },${
+            Math.round(geometry.colors[i].b * maxWhite)
+        },0.6)`;
         ctx.fillStyle = style;
 
         if (image === undefined) {
