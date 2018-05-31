@@ -52,5 +52,9 @@
     "moduleDirectories": [
       "./node_modules"
     ]
+  },
+  "dependencies": {
+    "babel-runtime": "^6.26.0",
+    "jimp": "^0.2.28"
   }
 }
