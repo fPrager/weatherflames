@@ -1,4 +1,3 @@
-import DarkSky from 'dark-sky';
 import https from 'https';
 
 const requestWeather = (data) => {

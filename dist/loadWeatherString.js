@@ -17,10 +17,6 @@ var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _darkSky = require('dark-sky');
-
-var _darkSky2 = _interopRequireDefault(_darkSky);
-
 var _https = require('https');
 
 var _https2 = _interopRequireDefault(_https);
