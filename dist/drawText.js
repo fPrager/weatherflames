@@ -37,7 +37,7 @@ var drawText = exports.drawText = function () {
                 switch (_context.prev = _context.next) {
                     case 0:
                         _context.next = 2;
-                        return _jimp2.default.loadFont('public/font.fnt');
+                        return _jimp2.default.loadFont('./public/font.fnt');
 
                     case 2:
                         font = _context.sent;

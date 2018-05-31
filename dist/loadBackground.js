@@ -17,7 +17,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var loadBackground = exports.loadBackground = function loadBackground() {
     return new _promise2.default(function (resolve) {
-        _jimp2.default.read('public/natural-paper.png', function (err, image) {
+        _jimp2.default.read('./public/natural-paper.png', function (err, image) {
             resolve(image);
         });
     });
