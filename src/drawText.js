@@ -1,4 +1,5 @@
 import Jimp from 'jimp';
+import path from 'path';
 
 const drawRectangle = (image, x1, x2, y1, y2) => {
     for (let x = x1; x < x2; x += 1) {
@@ -7,7 +8,7 @@ const drawRectangle = (image, x1, x2, y1, y2) => {
 };
 
 export const drawText = async ({ image, data }) => {
-    const font = await Jimp.loadFont('./public/font.fnt');
+    const font = await Jimp.loadFont(path.join(__dirname, '../public/font.fnt'));
     // console.log(font);
     const estimatedTextLenght = data.summary.length * 16;
     const estimatedTextHeight = 25;

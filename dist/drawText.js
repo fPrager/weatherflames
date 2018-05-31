@@ -17,6 +17,10 @@ var _jimp = require('jimp');
 
 var _jimp2 = _interopRequireDefault(_jimp);
 
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var drawRectangle = function drawRectangle(image, x1, x2, y1, y2) {
@@ -37,7 +41,7 @@ var drawText = exports.drawText = function () {
                 switch (_context.prev = _context.next) {
                     case 0:
                         _context.next = 2;
-                        return _jimp2.default.loadFont('./public/font.fnt');
+                        return _jimp2.default.loadFont(_path2.default.join(__dirname, '../public/font.fnt'));
 
                     case 2:
                         font = _context.sent;
