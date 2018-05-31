@@ -5,6 +5,18 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.generate = undefined;
 
+var _maxSafeInteger = require('babel-runtime/core-js/number/max-safe-integer');
+
+var _maxSafeInteger2 = _interopRequireDefault(_maxSafeInteger);
+
+var _minSafeInteger = require('babel-runtime/core-js/number/min-safe-integer');
+
+var _minSafeInteger2 = _interopRequireDefault(_minSafeInteger);
+
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
 var _three = require('three');
 
 var THREE = _interopRequireWildcard(_three);
@@ -19,6 +31,8 @@ var _updateVisitor = require('./common/flame/updateVisitor');
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var geometry = void 0;
 var globalBranches = void 0;
 var superPoint = void 0;
@@ -26,7 +40,7 @@ var jumpiness = 3;
 var boundingSphere = void 0;
 
 var objectValueByIndex = function objectValueByIndex(obj, index) {
-    var keys = Object.keys(obj);
+    var keys = (0, _keys2.default)(obj);
     return obj[keys[index % keys.length]];
 };
 
@@ -183,20 +197,15 @@ var generate = exports.generate = function generate() {
         height = _ref2[1];
 
 
-    ctx.beginPath();
-    ctx.rect(0, 0, width, height);
-    ctx.fillStyle = 'white';
-    ctx.fill();
-
     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
 
     var bounds = {
-        xMax: Number.MIN_SAFE_INTEGER,
-        xMin: Number.MAX_SAFE_INTEGER,
-        yMax: Number.MIN_SAFE_INTEGER,
-        yMin: Number.MAX_SAFE_INTEGER,
-        zMax: Number.MIN_SAFE_INTEGER,
-        zMin: Number.MAX_SAFE_INTEGER
+        xMax: _minSafeInteger2.default,
+        xMin: _maxSafeInteger2.default,
+        yMax: _minSafeInteger2.default,
+        yMin: _maxSafeInteger2.default,
+        zMax: _minSafeInteger2.default,
+        zMin: _maxSafeInteger2.default
     };
 
     for (var i = 0; i < geometry.vertices.length; i += 1) {
@@ -221,7 +230,7 @@ var generate = exports.generate = function generate() {
     }
 
     for (var _i = 0; _i < geometry.vertices.length; _i += 1) {
-        var coords = geometry.vertices[_i].applyAxisAngle(new THREE.Vector3(0, 1, 0), time * Math.PI);
+        var coords = geometry.vertices[_i].applyAxisAngle(new THREE.Vector3(0, 1, 0), time * Math.PI * 2);
         // coords.x = normalize(bounds.xMin, bounds.xMax, coords.x);
         // coords.y = normalize(bounds.yMin, bounds.yMax, coords.y);
         // coords.z = normalize(bounds.zMin, bounds.zMax, coords.z);

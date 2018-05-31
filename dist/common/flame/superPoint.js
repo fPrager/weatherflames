@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createSuperPoint = undefined;
 
+var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
 var _three = require('three');
 
 var THREE = _interopRequireWildcard(_three);
@@ -15,7 +19,7 @@ var _transforms = require('./transforms');
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // import { UpdateVisitor } from './updateVisitor';
 
@@ -80,7 +84,7 @@ var createSuperPoint = exports.createSuperPoint = function createSuperPoint(poin
                     }
                 }
 
-                child.updateSubtree.apply(child, [depth - 1].concat(_toConsumableArray(visitors)));
+                child.updateSubtree.apply(child, [depth - 1].concat((0, _toConsumableArray3.default)(visitors)));
             }
         },
         recalculate: function recalculate(initialX, initialY, initialZ, depth) {
@@ -92,7 +96,7 @@ var createSuperPoint = exports.createSuperPoint = function createSuperPoint(poin
                 visitors[_key2 - 4] = arguments[_key2];
             }
 
-            this.updateSubtree.apply(this, [depth].concat(_toConsumableArray(visitors)));
+            this.updateSubtree.apply(this, [depth].concat((0, _toConsumableArray3.default)(visitors)));
             // console.timeEnd("updateSubtree");
             this.rootGeometry.verticesNeedUpdate = true;
         }

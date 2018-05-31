@@ -190,10 +190,6 @@ export const generate = ({
     const ctx = canvas.getContext('2d');
     const [width, height] = [canvas.width, canvas.height];
 
-    ctx.beginPath();
-    ctx.rect(0, 0, width, height);
-    ctx.fillStyle = 'white';
-    ctx.fill();
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
 
@@ -222,7 +218,7 @@ export const generate = ({
     for (let i = 0; i < geometry.vertices.length; i += 1) {
         const coords = geometry.vertices[i].applyAxisAngle(
             new THREE.Vector3(0, 1, 0),
-            time * Math.PI,
+            time * Math.PI * 2,
         );
         // coords.x = normalize(bounds.xMin, bounds.xMax, coords.x);
         // coords.y = normalize(bounds.yMin, bounds.yMax, coords.y);
