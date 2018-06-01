@@ -87,10 +87,10 @@ var loadWeatherString = exports.loadWeatherString = function () {
                     case 5:
                         weather = _context.sent;
                         return _context.abrupt('return', {
-                            summary: weather.hourly.summary,
+                            summary: weather.daily.data[0].summary,
                             tempMin: Math.round(weather.daily.data[0].temperatureLow),
                             tempMax: Math.round(weather.daily.data[0].temperatureHigh),
-                            seed: weather.hourly.icon
+                            seed: weather.daily.data[0].summary
                         });
 
                     case 9:

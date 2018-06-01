@@ -63,12 +63,11 @@ var drawText = exports.drawText = function () {
                         estimatedTempLength = tempText.length * 16;
 
                         tempText += '' + data.tempMax;
-                        console.log(tempText);
                         tempX = image.bitmap.width / 2 - estimatedTempLength;
 
                         image.print(font, tempX, lineYPos + 12, tempText);
 
-                    case 18:
+                    case 17:
                     case 'end':
                         return _context.stop();
                 }

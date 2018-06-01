@@ -43,10 +43,10 @@ export const loadWeatherString = async ({ lat = 40.3482922, lon = -74.7398824, d
     try {
         const weather = await requestWeather({ lat, lon, darkKey });
         return {
-            summary: weather.hourly.summary,
+            summary: weather.daily.data[0].summary,
             tempMin: Math.round(weather.daily.data[0].temperatureLow),
             tempMax: Math.round(weather.daily.data[0].temperatureHigh),
-            seed: weather.hourly.icon,
+            seed: weather.daily.data[0].summary,
         };
     } catch (error) {
         return {

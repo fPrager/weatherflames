@@ -29,6 +29,8 @@ var _loadWeatherString = require('./loadWeatherString');
 
 var _drawText = require('./drawText');
 
+var _mapSeed = require('./mapSeed');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var readCanvas = function readCanvas(canvas) {
@@ -41,7 +43,7 @@ var readCanvas = function readCanvas(canvas) {
 
 var render = function () {
     var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(canvas, options) {
-        var weatherData, background, time, flame;
+        var weatherData, background, time, newSeed, flame;
         return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
                 switch (_context.prev = _context.next) {
@@ -58,23 +60,28 @@ var render = function () {
                         background = _context.sent;
                         time = new Date().getHours() / 24;
 
-                        (0, _generate.generate)({ canvas: canvas, seed: weatherData.seed, time: time });
-                        _context.next = 10;
+                        console.log('orig seed: ' + weatherData.seed);
+                        newSeed = (0, _mapSeed.mapSeed)(weatherData.seed);
+
+                        console.log('new seed: ' + newSeed);
+
+                        (0, _generate.generate)({ canvas: canvas, seed: newSeed, time: time });
+                        _context.next = 13;
                         return readCanvas(canvas);
 
-                    case 10:
+                    case 13:
                         flame = _context.sent;
 
                         background.resize(flame.bitmap.width, flame.bitmap.height);
                         background.brightness(0.3);
                         background.composite(flame, 0, 0);
-                        _context.next = 16;
+                        _context.next = 19;
                         return (0, _drawText.drawText)({ image: background, data: weatherData });
 
-                    case 16:
+                    case 19:
                         return _context.abrupt('return', background);
 
-                    case 17:
+                    case 20:
                     case 'end':
                         return _context.stop();
                 }

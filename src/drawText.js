@@ -23,7 +23,6 @@ export const drawText = async ({ image, data }) => {
     let tempText = `${data.tempMin}.`;
     const estimatedTempLength = tempText.length * 16;
     tempText += `${data.tempMax}`;
-    console.log(tempText);
     const tempX = (image.bitmap.width / 2) - estimatedTempLength;
     image.print(font, tempX, lineYPos + 12, tempText);
 };
