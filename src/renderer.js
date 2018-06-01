@@ -19,7 +19,7 @@ const render = async (canvas, options) => {
     const background = await loadBackground();
     const time = (new Date()).getHours() / 24;
     console.log(`orig seed: ${weatherData.seed}`);
-    const newSeed = mapSeed(weatherData.seed);
+    const newSeed = await mapSeed(weatherData.seed);
     console.log(`new seed: ${newSeed}`);
 
     generate({ canvas, seed: newSeed, time });

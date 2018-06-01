@@ -61,27 +61,31 @@ var render = function () {
                         time = new Date().getHours() / 24;
 
                         console.log('orig seed: ' + weatherData.seed);
-                        newSeed = (0, _mapSeed.mapSeed)(weatherData.seed);
+                        _context.next = 10;
+                        return (0, _mapSeed.mapSeed)(weatherData.seed);
+
+                    case 10:
+                        newSeed = _context.sent;
 
                         console.log('new seed: ' + newSeed);
 
                         (0, _generate.generate)({ canvas: canvas, seed: newSeed, time: time });
-                        _context.next = 13;
+                        _context.next = 15;
                         return readCanvas(canvas);
 
-                    case 13:
+                    case 15:
                         flame = _context.sent;
 
                         background.resize(flame.bitmap.width, flame.bitmap.height);
                         background.brightness(0.3);
                         background.composite(flame, 0, 0);
-                        _context.next = 19;
+                        _context.next = 21;
                         return (0, _drawText.drawText)({ image: background, data: weatherData });
 
-                    case 19:
+                    case 21:
                         return _context.abrupt('return', background);
 
-                    case 20:
+                    case 22:
                     case 'end':
                         return _context.stop();
                 }
