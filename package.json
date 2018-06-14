@@ -1,5 +1,5 @@
 {
-  "name": "waetherflames",
+  "name": "weatherflames",
   "version": "0.0.1",
   "description": "package to render particles based on weather data",
   "main": "dist/renderer.js",
