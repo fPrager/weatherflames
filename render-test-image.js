@@ -14,7 +14,15 @@ const processImage = (image) => {
 const canvas = new Canvas(1240, 960);
 const render = () => {
     const filename = 'output/test.png';
-    renderer.render(canvas, { darkKey: '3683ffdaed9ec030602e29e6d0f61006' }).then((result) => {
+    renderer.render(canvas, {
+        darkKey: '3683ffdaed9ec030602e29e6d0f61006',
+        distance: 5,
+        pointSize: 40,
+        alpha: 0.3,
+        maxWhite: 60,
+        shrinkY: 0.6,
+        yOffset: -100,
+    }).then((result) => {
         processImage(result).then((image) => {
             image.write(filename);
         });

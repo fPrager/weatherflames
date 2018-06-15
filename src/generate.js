@@ -143,10 +143,10 @@ const randomBranches = (name) => {
     return branches;
 };
 
-const getPixel = (vertex, width, height) => {
+const getPixel = (vertex, width, height, shrinkX, shrinkY) => {
     return {
-        x: width * ((vertex.x * 0.3) + 0.5),
-        y: height * ((vertex.y * 0.3) + 0.5),
+        x: width * ((vertex.x * shrinkX * 0.3) + 0.5),
+        y: height * ((vertex.y * shrinkY * 0.3) + 0.5),
     };
 };
 
@@ -170,7 +170,18 @@ const drawStroke = (context, image, x, y, z) => {
 };
 
 export const generate = ({
-    seed, canvas, image, time = 1,
+    seed,
+    canvas,
+    image,
+    time = 1,
+    pointSize = 3,
+    maxWhite = 100,
+    distance = 2,
+    alpha = 0.8,
+    shrinkX = 1,
+    shrinkY = 1,
+    xOffset = 0,
+    yOffset = 0,
 } = { }) => {
     globalBranches = randomBranches(seed);
 
@@ -223,9 +234,8 @@ export const generate = ({
         // coords.x = normalize(bounds.xMin, bounds.xMax, coords.x);
         // coords.y = normalize(bounds.yMin, bounds.yMax, coords.y);
         // coords.z = normalize(bounds.zMin, bounds.zMax, coords.z);
-        const pixel = getPixel(coords, width, height);
+        const pixel = getPixel(coords, width, height, shrinkX, shrinkY);
         ctx.beginPath();
-        const maxWhite = 100;
 
         const style = `rgba(${
             Math.round(geometry.colors[i].r * maxWhite)
@@ -233,12 +243,13 @@ export const generate = ({
             Math.round(geometry.colors[i].g * maxWhite)
         },${
             Math.round(geometry.colors[i].b * maxWhite)
-        },0.6)`;
+        },${alpha})`;
         ctx.fillStyle = style;
 
         if (image === undefined) {
-            const size = 2 * (1 - normalize(bounds.zMin, bounds.zMax, coords.z));
-            ctx.arc(pixel.x, pixel.y, size, 0, Math.PI * 2, true);
+            const distanceFactor = (1 - normalize(bounds.zMin, bounds.zMax, coords.z)) ** distance;
+            const size = pointSize * distanceFactor;
+            ctx.arc(pixel.x + xOffset, pixel.y + yOffset, size, 0, Math.PI * 2, true);
             ctx.closePath();
             ctx.fill();
         } else {

@@ -9,6 +9,10 @@ var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
 var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
@@ -58,34 +62,45 @@ var render = function () {
 
                     case 5:
                         background = _context.sent;
-                        time = new Date().getHours() / 24;
+                        time = options.time || new Date().getHours() / 24;
 
                         console.log('orig seed: ' + weatherData.seed);
-                        _context.next = 10;
+                        _context.t0 = options.seed;
+
+                        if (_context.t0) {
+                            _context.next = 13;
+                            break;
+                        }
+
+                        _context.next = 12;
                         return (0, _mapSeed.mapSeed)(weatherData.seed);
 
-                    case 10:
-                        newSeed = _context.sent;
+                    case 12:
+                        _context.t0 = _context.sent;
+
+                    case 13:
+                        newSeed = _context.t0;
 
                         console.log('new seed: ' + newSeed);
 
-                        (0, _generate.generate)({ canvas: canvas, seed: newSeed, time: time });
-                        _context.next = 15;
+                        (0, _generate.generate)((0, _extends3.default)({}, options, { canvas: canvas, seed: newSeed, time: time
+                        }));
+                        _context.next = 18;
                         return readCanvas(canvas);
 
-                    case 15:
+                    case 18:
                         flame = _context.sent;
 
                         background.resize(flame.bitmap.width, flame.bitmap.height);
                         background.brightness(0.3);
                         background.composite(flame, 0, 0);
-                        _context.next = 21;
+                        _context.next = 24;
                         return (0, _drawText.drawText)({ image: background, data: weatherData });
 
-                    case 21:
+                    case 24:
                         return _context.abrupt('return', background);
 
-                    case 22:
+                    case 25:
                     case 'end':
                         return _context.stop();
                 }

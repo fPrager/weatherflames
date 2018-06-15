@@ -147,10 +147,10 @@ var randomBranches = function randomBranches(name) {
     return branches;
 };
 
-var getPixel = function getPixel(vertex, width, height) {
+var getPixel = function getPixel(vertex, width, height, shrinkX, shrinkY) {
     return {
-        x: width * (vertex.x * 0.3 + 0.5),
-        y: height * (vertex.y * 0.3 + 0.5)
+        x: width * (vertex.x * shrinkX * 0.3 + 0.5),
+        y: height * (vertex.y * shrinkY * 0.3 + 0.5)
     };
 };
 
@@ -179,7 +179,23 @@ var generate = exports.generate = function generate() {
         canvas = _ref.canvas,
         image = _ref.image,
         _ref$time = _ref.time,
-        time = _ref$time === undefined ? 1 : _ref$time;
+        time = _ref$time === undefined ? 1 : _ref$time,
+        _ref$pointSize = _ref.pointSize,
+        pointSize = _ref$pointSize === undefined ? 3 : _ref$pointSize,
+        _ref$maxWhite = _ref.maxWhite,
+        maxWhite = _ref$maxWhite === undefined ? 100 : _ref$maxWhite,
+        _ref$distance = _ref.distance,
+        distance = _ref$distance === undefined ? 2 : _ref$distance,
+        _ref$alpha = _ref.alpha,
+        alpha = _ref$alpha === undefined ? 0.8 : _ref$alpha,
+        _ref$shrinkX = _ref.shrinkX,
+        shrinkX = _ref$shrinkX === undefined ? 1 : _ref$shrinkX,
+        _ref$shrinkY = _ref.shrinkY,
+        shrinkY = _ref$shrinkY === undefined ? 1 : _ref$shrinkY,
+        _ref$xOffset = _ref.xOffset,
+        xOffset = _ref$xOffset === undefined ? 0 : _ref$xOffset,
+        _ref$yOffset = _ref.yOffset,
+        yOffset = _ref$yOffset === undefined ? 0 : _ref$yOffset;
 
     globalBranches = randomBranches(seed);
 
@@ -234,16 +250,16 @@ var generate = exports.generate = function generate() {
         // coords.x = normalize(bounds.xMin, bounds.xMax, coords.x);
         // coords.y = normalize(bounds.yMin, bounds.yMax, coords.y);
         // coords.z = normalize(bounds.zMin, bounds.zMax, coords.z);
-        var pixel = getPixel(coords, width, height);
+        var pixel = getPixel(coords, width, height, shrinkX, shrinkY);
         ctx.beginPath();
-        var maxWhite = 100;
 
-        var style = 'rgba(' + Math.round(geometry.colors[_i].r * maxWhite) + ',' + Math.round(geometry.colors[_i].g * maxWhite) + ',' + Math.round(geometry.colors[_i].b * maxWhite) + ',0.6)';
+        var style = 'rgba(' + Math.round(geometry.colors[_i].r * maxWhite) + ',' + Math.round(geometry.colors[_i].g * maxWhite) + ',' + Math.round(geometry.colors[_i].b * maxWhite) + ',' + alpha + ')';
         ctx.fillStyle = style;
 
         if (image === undefined) {
-            var size = 2 * (1 - normalize(bounds.zMin, bounds.zMax, coords.z));
-            ctx.arc(pixel.x, pixel.y, size, 0, Math.PI * 2, true);
+            var distanceFactor = Math.pow(1 - normalize(bounds.zMin, bounds.zMax, coords.z), distance);
+            var size = pointSize * distanceFactor;
+            ctx.arc(pixel.x + xOffset, pixel.y + yOffset, size, 0, Math.PI * 2, true);
             ctx.closePath();
             ctx.fill();
         } else {

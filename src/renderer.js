@@ -17,12 +17,14 @@ const readCanvas = (canvas) => {
 const render = async (canvas, options) => {
     const weatherData = await loadWeatherString(options);
     const background = await loadBackground();
-    const time = (new Date()).getHours() / 24;
+    const time = options.time || (new Date()).getHours() / 24;
     console.log(`orig seed: ${weatherData.seed}`);
-    const newSeed = await mapSeed(weatherData.seed);
+    const newSeed = (options.seed || await mapSeed(weatherData.seed));
     console.log(`new seed: ${newSeed}`);
 
-    generate({ canvas, seed: newSeed, time });
+    generate({
+        ...options, canvas, seed: newSeed, time,
+    });
     const flame = await readCanvas(canvas);
     background.resize(flame.bitmap.width, flame.bitmap.height);
     background.brightness(0.3);
